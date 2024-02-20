@@ -1,0 +1,4 @@
+repository "USC112@USC112_Management@cloud"
+  path "/"
+    br "/main"
+    co "/main"
