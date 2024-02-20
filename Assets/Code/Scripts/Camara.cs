@@ -7,7 +7,7 @@ public class OrbitCamera : MonoBehaviour
     private Vector3 _newTarget = Vector3.zero;
     public GameObject focusItem;
 
-    // Valores de velocidad
+    // Valores de velocidad  
     [SerializeField]
     private float
         _distance = 10f,
