@@ -1,0 +1,5 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <ui:VisualElement style="flex-grow: 1; align-items: stretch; justify-content: flex-end;">
+        <ui:ProgressBar value="22" title="day-progress-bar" name="DayProgressBar" style="width: 20%; flex-direction: column;" />
+    </ui:VisualElement>
+</ui:UXML>
