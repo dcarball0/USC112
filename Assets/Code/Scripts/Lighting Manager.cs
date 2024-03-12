@@ -13,7 +13,7 @@ public class LightingManager : MonoBehaviour
     // Se elimina la lista de farolas ya que no las controlaremos directamente desde aquí
 
     // Añade una propiedad pública para saber si es de noche
-    public bool IsNight => TimeOfDay < 6 || TimeOfDay > 18; // Asume noche entre las 18:00 y las 6:00
+    public bool IsNight => TimeOfDay < 12 || TimeOfDay > 16; // Asume noche entre las 18:00 y las 6:00
 
     private void Update()
     {
