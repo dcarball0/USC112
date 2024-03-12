@@ -6,16 +6,27 @@ using UnityEngine.UIElements;
 
 public class UIManager : MonoBehaviour
 {
-    private void OnEnable() 
+    private void OnEnable()
     {
-        VisualElement root = GetComponent<UIDocument>().rootVisualElement;
+        UIDocument uiDocument = GetComponent<UIDocument>();
+        if (uiDocument == null)
+        {
+            //Debug.LogError("UIDocument component not found on the GameObject.");
+            return;
+        }
 
+        VisualElement root = uiDocument.rootVisualElement;
         ProgressBar dayBar = root.Q<ProgressBar>("DayProgressBar");
-        dayBar.lowValue = 0;
-        dayBar.lowValue = 24;
+        if (dayBar == null)
+        {
+           // Debug.LogError("ProgressBar with name 'DayProgressBar' not found.");
+            return;
+        }
 
-        
+        dayBar.lowValue = 0;
+        dayBar.highValue = 24; // Aquí parece haber un error tipográfico. Debe ser highValue, no lowValue nuevamente.
     }
-    
+
+
 
 }

@@ -1,14 +1,19 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 [ExecuteAlways]
 public class LightingManager : MonoBehaviour
 {
-    //Scene References
+    // Scene References
     [SerializeField] private Light DirectionalLight;
     [SerializeField] private LightingPreset Preset;
-    //Variables
+    // Variables
     [SerializeField, Range(0, 24)] public float TimeOfDay;
 
+    // Se elimina la lista de farolas ya que no las controlaremos directamente desde aquí
+
+    // Añade una propiedad pública para saber si es de noche
+    public bool IsNight => TimeOfDay < 6 || TimeOfDay > 18; // Asume noche entre las 18:00 y las 6:00
 
     private void Update()
     {
@@ -17,9 +22,9 @@ public class LightingManager : MonoBehaviour
 
         if (Application.isPlaying)
         {
-            //(Replace with a reference to the game time)
+            // (Reemplazar con referencia al tiempo del juego si es necesario)
             TimeOfDay += Time.deltaTime;
-            TimeOfDay %= 24; //Modulus to ensure always between 0-24
+            TimeOfDay %= 24; // Módulo para asegurar siempre entre 0-24
             UpdateLighting(TimeOfDay / 24f);
         }
         else
@@ -28,35 +33,32 @@ public class LightingManager : MonoBehaviour
         }
     }
 
-
     private void UpdateLighting(float timePercent)
     {
-        //Set ambient and fog
+        // Configurar luz ambiental y niebla
         RenderSettings.ambientLight = Preset.AmbientColor.Evaluate(timePercent);
         RenderSettings.fogColor = Preset.FogColor.Evaluate(timePercent);
 
-        //If the directional light is set then rotate and set it's color, I actually rarely use the rotation because it casts tall shadows unless you clamp the value
+        // Si la luz direccional está establecida, entonces rotarla y configurar su color
         if (DirectionalLight != null)
         {
             DirectionalLight.color = Preset.DirectionalColor.Evaluate(timePercent);
-
             DirectionalLight.transform.localRotation = Quaternion.Euler(new Vector3((timePercent * 360f) - 90f, 170f, 0));
         }
-
     }
 
-    //Try to find a directional light to use if we haven't set one
+    // Intenta encontrar una luz direccional para usar si no hemos configurado una
     private void OnValidate()
     {
         if (DirectionalLight != null)
             return;
 
-        //Search for lighting tab sun
+        // Buscar en la configuración de renderizado la luz del sol
         if (RenderSettings.sun != null)
         {
             DirectionalLight = RenderSettings.sun;
         }
-        //Search scene for light that fits criteria (directional)
+        // Buscar en la escena una luz que cumpla los criterios (direccional)
         else
         {
             Light[] lights = GameObject.FindObjectsOfType<Light>();
