@@ -1,38 +1,40 @@
 using UnityEngine;
-/*
+using System.Collections; // Necesario para usar corutinas
+
 public class StreetLightControl : MonoBehaviour
 {
-    public LightingManager lightingManager; // Referencia al LightingManager
-    private Light myLight; // Componente Light de esta farola
-    public Transform bus; // Referencia al Transform del bus
-    public float detectionRange = 10f; // Rango para detectar el bus
+    private Light myLight;
+    public float delayBeforeTurningOff = 0.5f; // Tiempo en segundos antes de apagar la luz
 
     void Start()
     {
-        myLight = GetComponentInChildren<Light>(); // Asume que la luz es un hijo de la farola
-        myLight.enabled = false; // Asegura que la luz está apagada inicialmente
+        // Obtén la referencia al componente Light de la farola.
+        myLight = GetComponentInChildren<Light>();
+        myLight.enabled = false; // Inicia con la luz apagada.
     }
 
-    void Update()
+    void OnTriggerEnter(Collider other)
     {
-        if (lightingManager.IsNight && IsBusClose())
+        // Verifica si es el bus el que entra en el trigger.
+        if (other.CompareTag("Bus"))
         {
-            myLight.enabled = true; // Enciende la luz si es de noche y el bus está cerca
-        }
-        else
-        {
-            myLight.enabled = false; // De lo contrario, asegura que la luz esté apagada
+            StopAllCoroutines(); // Detiene la corutina en caso de que ya estuviera corriendo
+            myLight.enabled = true; // Enciende la luz.
         }
     }
 
-    bool IsBusClose()
+    void OnTriggerExit(Collider other)
     {
-        if (bus != null)
+        // Verifica si es el bus el que sale del trigger.
+        if (other.CompareTag("Bus"))
         {
-            float distanceToBus = Vector3.Distance(transform.position, bus.position);
-            return distanceToBus <= detectionRange;
+            StartCoroutine(TurnOffLightAfterDelay()); // Inicia la corutina para apagar la luz después del retraso
         }
-        return false;
+    }
+
+    IEnumerator TurnOffLightAfterDelay()
+    {
+        yield return new WaitForSeconds(delayBeforeTurningOff); // Espera el tiempo especificado
+        myLight.enabled = false; // Apaga la luz.
     }
 }
-*/
