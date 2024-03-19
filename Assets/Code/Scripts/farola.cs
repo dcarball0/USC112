@@ -1,5 +1,5 @@
 using UnityEngine;
-
+/*
 public class StreetLightControl : MonoBehaviour
 {
     private Light myLight;
@@ -29,3 +29,4 @@ public class StreetLightControl : MonoBehaviour
         }
     }
 }
+*/
