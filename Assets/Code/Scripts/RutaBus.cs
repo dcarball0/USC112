@@ -1,23 +1,24 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
- 
- 
+
+
 public class RutaBus : MonoBehaviour
 {
     [SerializeField] List<Transform> wayPoints;
-    [SerializeField] float moveSpeed = 10f,
+    [SerializeField]
+    float moveSpeed = 10f,
                     rotationSpeed = 10f;
     int waypointIndex = 0;
- 
+
     Transform initialPosition;
- 
+
     // Start is called before the first frame update
     void Start()
     {
-       transform.position = wayPoints[0].transform.position;
+        transform.position = wayPoints[0].transform.position;
     }
- 
+
     // Update is called once per frame
     void Update()
     {
@@ -44,10 +45,10 @@ public class RutaBus : MonoBehaviour
                 // Calculate a rotation a step closer to the target and applies rotation to this object
                 transform.rotation = Quaternion.LookRotation(newDirection);
             }
-        
+
             if (waypointIndex < wayPoints.Count && Vector3.Distance(transform.position, wayPoints[waypointIndex].transform.position) < 1)
                 waypointIndex += 1;
-            
+
             if (waypointIndex >= wayPoints.Count)
                 waypointIndex = 0;
 
@@ -59,7 +60,7 @@ public class RutaBus : MonoBehaviour
         for (int i = 0; i < wayPoints.Count; i++)
         {
             Gizmos.color = Color.blue;
-            
+
             // Connect current waypoint to the next one
             Gizmos.DrawLine(wayPoints[i].transform.position, wayPoints[(i + 1) % wayPoints.Count].transform.position);
         }
