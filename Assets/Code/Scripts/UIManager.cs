@@ -6,25 +6,37 @@ using UnityEngine.UIElements;
 
 public class UIManager : MonoBehaviour
 {
+    [SerializeField] private GameObject sceneManager;
+    private CicloDiaNoche lightingManager;
+    
+    ProgressBar dayBar;
+    Button timeScaleButton;
     private void OnEnable()
     {
+        lightingManager = sceneManager.GetComponent<CicloDiaNoche>();
+
         UIDocument uiDocument = GetComponent<UIDocument>();
-        if (uiDocument == null)
-        {
-            //Debug.LogError("UIDocument component not found on the GameObject.");
-            return;
-        }
 
         VisualElement root = uiDocument.rootVisualElement;
-        ProgressBar dayBar = root.Q<ProgressBar>("DayProgressBar");
+        dayBar = root.Q<ProgressBar>();
+        timeScaleButton = root.Q<Button>(name: "TimeScaleButton");
+        timeScaleButton.RegisterCallback<ClickEvent>(lightingManager.ChangeTimeScale);
+        
+
         if (dayBar == null)
         {
-           // Debug.LogError("ProgressBar with name 'DayProgressBar' not found.");
+            Debug.LogError("ProgressBar with name 'DayProgressBar' not found.");
             return;
         }
 
+        // root.Q(className: "unity-progress-bar__progress");
+
         dayBar.lowValue = 0;
-        dayBar.highValue = 24; // Aquí parece haber un error tipográfico. Debe ser highValue, no lowValue nuevamente.
+        dayBar.highValue = 24; 
+    }
+
+    private void LateUpdate () {
+        dayBar.value = lightingManager.TimeOfDay;
     }
 
 
