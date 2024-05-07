@@ -1,0 +1,8 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <ui:VisualElement style="flex-grow: 1; align-items: stretch; justify-content: flex-end; overflow: visible; flex-direction: column; flex-wrap: nowrap; align-self: auto; flex-shrink: 1; position: relative;">
+        <ui:VisualElement name="BottomContainer" style="flex-grow: 1; flex-direction: row; height: auto; max-height: 8%;">
+            <ui:ProgressBar value="7.6" title="19/03/2024" name="DayProgressBar" high-value="24" style="width: 20%; flex-direction: column; font-size: 30%; background-color: rgba(0, 0, 0, 0); height: 24px; align-self: center;" />
+            <ui:Button text="1x" parse-escape-sequences="true" display-tooltip-when-elided="true" name="TimeScaleButton" style="width: 1%; height: 1%; font-size: 10px; align-self: center;" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>
