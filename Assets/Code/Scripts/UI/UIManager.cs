@@ -9,6 +9,7 @@ public class UIManager : MonoBehaviour
 
     ProgressBar dayBar;
     Button timeScaleButton, contaminacionAmbientalButton, contaminacionAcusticaButton, consumoAguaButton, consumoElectricidadButton;
+    Label temperaturaLabel, humedadLabel, calidadAireLabel;
 
     // Instancia Singleton para acceso fácil
     public static UIManager Instance { get; private set; }
@@ -51,6 +52,10 @@ public class UIManager : MonoBehaviour
         consumoElectricidadButton = root.Q<Button>(name: "ConsumoElectricidadButton");
         consumoElectricidadButton.RegisterCallback<ClickEvent>(niveles.ToggleConsumoElectrico);
 
+        temperaturaLabel = root.Q<Label>(name: "TemperaturaLabel");
+        humedadLabel = root.Q<Label>(name: "HumedadLabel");
+        calidadAireLabel = root.Q<Label>(name: "CalidadAireLabel");
+
         if (dayBar == null)
         {
             Debug.LogError("ProgressBar with name 'DayProgressBar' not found.");
@@ -63,6 +68,9 @@ public class UIManager : MonoBehaviour
 
     private void LateUpdate()
     {
-        dayBar.value = lightingManager.TimeOfDay;
+        dayBar.value = lightingManager.GetTimeOfDay();
+        temperaturaLabel.text = $"{sceneManager.GetComponent<Simulacion>().GetTemperatura()}°C";
+        humedadLabel.text = $"{sceneManager.GetComponent<Simulacion>().GetHumedad():F1}%";
+        calidadAireLabel.text = $"{sceneManager.GetComponent<Simulacion>().GetCalidadAire()} AQI";
     }
 }
