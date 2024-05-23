@@ -6,10 +6,13 @@ public class OutlineSelection : MonoBehaviour
     [SerializeField] private Color selectionColor = Color.blue;
     [SerializeField] private float highlightOutlineWidth = 1.0f;
     [SerializeField] private float selectionOutlineWidth = 3.0f;
+    [SerializeField] private float doubleClickTime = 0.3f; // Tiempo máximo entre clics para considerar doble clic
 
     private Transform highlight;
     private Transform currentSelection;
     private RaycastHit raycastHit;
+    private float lastClickTime;
+    private bool isDoubleClick;
 
     void Update()
     {
@@ -57,35 +60,41 @@ public class OutlineSelection : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-            // Si hay un objeto resaltado, cambiar la selección
-            if (highlight)
+            float timeSinceLastClick = Time.time - lastClickTime;
+            if (timeSinceLastClick <= doubleClickTime)
             {
-                // Restablecer el outline del objeto previamente seleccionado
-                if (currentSelection != null)
-                {
-                    ResetSelection(currentSelection);
-                }
-
-                // Asignar el nuevo objeto seleccionado
-                currentSelection = highlight;
-                Outline outline = currentSelection.gameObject.GetComponent<Outline>();
-                if (outline == null)
-                {
-                    outline = currentSelection.gameObject.AddComponent<Outline>();
-                }
-                outline.OutlineColor = selectionColor;
-                outline.OutlineWidth = selectionOutlineWidth;
-                outline.enabled = true;
-
-                highlight = null;
+                isDoubleClick = true;
             }
-            // Si no hay un objeto resaltado, deseleccionar el objeto actual
             else
             {
-                if (currentSelection != null)
+                isDoubleClick = false;
+            }
+
+            lastClickTime = Time.time;
+
+            if (isDoubleClick)
+            {
+                // Si hay un objeto resaltado, cambiar la selección
+                if (highlight)
                 {
-                    ResetSelection(currentSelection);
-                    currentSelection = null;
+                    // Restablecer el outline del objeto previamente seleccionado
+                    if (currentSelection != null && currentSelection != highlight)
+                    {
+                        ResetSelection(currentSelection);
+                    }
+
+                    // Asignar el nuevo objeto seleccionado
+                    currentSelection = highlight;
+                    Outline outline = currentSelection.gameObject.GetComponent<Outline>();
+                    if (outline == null)
+                    {
+                        outline = currentSelection.gameObject.AddComponent<Outline>();
+                    }
+                    outline.OutlineColor = selectionColor;
+                    outline.OutlineWidth = selectionOutlineWidth;
+                    outline.enabled = true;
+
+                    highlight = null;
                 }
             }
         }
