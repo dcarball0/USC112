@@ -3,6 +3,7 @@
         <ui:VisualElement name="BottomContainer" style="flex-grow: 1; flex-direction: row; height: auto; max-height: 8%;">
             <ui:ProgressBar value="7.6" title="19/03/2024" name="DayProgressBar" high-value="24" style="width: 20%; flex-direction: column; font-size: 30%; background-color: rgba(0, 0, 0, 0); height: 24px; align-self: center;" />
             <ui:Button text="1x" parse-escape-sequences="true" display-tooltip-when-elided="true" name="TimeScaleButton" style="width: 1%; height: 1%; font-size: 10px; align-self: center;" />
+            <ui:Button text=" " parse-escape-sequences="true" display-tooltip-when-elided="true" name="ContaminacionButton" style="width: 23px; height: 1%; font-size: 10px; align-self: center; background-image: url(&apos;project://database/Assets/Art/contaminacionIcono.png?fileID=2800000&amp;guid=74bc5d3e9fc348e4b934f83a4fe344b8&amp;type=3#contaminacionIcono&apos;); -unity-background-scale-mode: scale-to-fit;" />
         </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>
