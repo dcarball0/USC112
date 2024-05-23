@@ -8,7 +8,7 @@ public class BuildingHandler : MonoBehaviour
         foreach (Transform child in transform)
         {
 
-            if (child.name.StartsWith("Tag:"))
+            if (child.name.Contains("Tag") || child.name.Contains("097") || child.name.Contains("Curtidos"))
             {
                 continue;
             }
