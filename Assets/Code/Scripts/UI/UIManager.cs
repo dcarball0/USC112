@@ -8,7 +8,7 @@ public class UIManager : MonoBehaviour
     private Niveles niveles;
 
     ProgressBar dayBar;
-    Button timeScaleButton, contaminacionButton;
+    Button timeScaleButton, contaminacionAmbientalButton, contaminacionAcusticaButton, consumoAguaButton, consumoElectricidadButton;
 
     // Instancia Singleton para acceso fácil
     public static UIManager Instance { get; private set; }
@@ -39,9 +39,17 @@ public class UIManager : MonoBehaviour
         timeScaleButton = root.Q<Button>(name: "TimeScaleButton");
         timeScaleButton.RegisterCallback<ClickEvent>(lightingManager.ChangeTimeScale);
 
-        contaminacionButton = root.Q<Button>(name: "ContaminacionButton");
-        contaminacionButton.RegisterCallback<ClickEvent>(niveles.ToggleContaminacion);
+        contaminacionAmbientalButton = root.Q<Button>(name: "ContaminacionAmbientalButton");
+        contaminacionAmbientalButton.RegisterCallback<ClickEvent>(niveles.ToggleContaminacionAmbiental);
 
+        contaminacionAcusticaButton = root.Q<Button>(name: "ContaminacionAcusticaButton");
+        contaminacionAcusticaButton.RegisterCallback<ClickEvent>(niveles.ToggleContaminacionAcustica);
+
+        consumoAguaButton = root.Q<Button>(name: "ConsumoAguaButton");
+        consumoAguaButton.RegisterCallback<ClickEvent>(niveles.ToggleConsumoAgua);
+
+        consumoElectricidadButton = root.Q<Button>(name: "ConsumoElectricidadButton");
+        consumoElectricidadButton.RegisterCallback<ClickEvent>(niveles.ToggleConsumoElectrico);
 
         if (dayBar == null)
         {
