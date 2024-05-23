@@ -32,9 +32,6 @@ public class Edificio : MonoBehaviour
     public bool tieneControlAcceso;
     public bool tienePlanEvacuacionEmergencia;
 
-    private float lastClickTime = 0;
-    private const float doubleClickThreshold = 0.5f;
-
     // Métodos para actualizar información (pueden ser más específicos según necesidad)
     public void ActualizarConsumoElectricidad(float nuevoConsumo)
     {

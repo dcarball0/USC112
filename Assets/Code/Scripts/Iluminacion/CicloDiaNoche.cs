@@ -9,15 +9,21 @@ public class CicloDiaNoche : MonoBehaviour
     [SerializeField] private Light DirectionalLight;
     [SerializeField] private LightingPreset Preset;
     // Variables
-    [SerializeField, Range(0, 24)] public float TimeOfDay;
+    private float TimeOfDay;
     //public float timeScale = 1f;
     private float[] timeScales = { 0.5f, 1f, 2f, 4f, 8f };
     private int currentIndex = 1; // Start at index 1 (1x timescale)
+    private Simulacion simulacion;
 
     // Se elimina la lista de farolas ya que no las controlaremos directamente desde aqui
 
     // Anade una propiedad publica para saber si es de noche
     public bool IsNight => TimeOfDay < 12 || TimeOfDay > 16; // Asume noche entre las 18:00 y las 6:00
+
+    private void Start()
+    {
+        simulacion = GetComponent<Simulacion>();
+    }
 
     public void ChangeTimeScale(ClickEvent evt)
     {
@@ -37,14 +43,12 @@ public class CicloDiaNoche : MonoBehaviour
 
         if (Application.isPlaying)
         {
-            // (Reemplazar con referencia al tiempo del juego si es necesario)
-            TimeOfDay += Time.deltaTime * Time.timeScale;
-            TimeOfDay %= 24; // Modulo para asegurar siempre entre 0-24
+            TimeOfDay = simulacion.TimeOfDay;
             UpdateLighting(TimeOfDay / 24f);
         }
         else
         {
-            UpdateLighting(TimeOfDay / 24f);
+            UpdateLighting(12 / 24f);
         }
     }
 
@@ -86,5 +90,10 @@ public class CicloDiaNoche : MonoBehaviour
                 }
             }
         }
+    }
+
+    public float GetTimeOfDay()
+    {
+        return TimeOfDay;
     }
 }
