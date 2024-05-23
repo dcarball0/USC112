@@ -2,33 +2,48 @@ using UnityEngine;
 
 public class OutlineSelection : MonoBehaviour
 {
+    [SerializeField] private Color highlightColor = Color.white;
+    [SerializeField] private Color selectionColor = Color.blue;
+    [SerializeField] private float highlightOutlineWidth = 1.0f;
+    [SerializeField] private float selectionOutlineWidth = 3.0f;
+
     private Transform highlight;
-    private Transform selection;
+    private Transform currentSelection;
     private RaycastHit raycastHit;
 
     void Update()
     {
-        // Highlight
-        if (highlight != null)
+        HandleHighlight();
+        HandleSelection();
+    }
+
+    void HandleHighlight()
+    {
+        // Desactivar el outline del objeto previamente resaltado si no es el seleccionado
+        if (highlight != null && highlight != currentSelection)
         {
-            highlight.gameObject.GetComponent<Outline>().enabled = false;
+            Outline outline = highlight.gameObject.GetComponent<Outline>();
+            if (outline != null)
+            {
+                outline.enabled = false;
+            }
             highlight = null;
         }
+
+        // Realizar el raycast para detectar el objeto bajo el cursor
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(ray, out raycastHit))
         {
             highlight = raycastHit.transform;
-            //if(highlight.name != "Terrain")
-                //Debug.Log("Objeto resaltado: " + highlight.name);
-            if (highlight.CompareTag("Selectable") && highlight != selection)
+            if (highlight.CompareTag("Selectable") && highlight != currentSelection)
             {
                 Outline outline = highlight.gameObject.GetComponent<Outline>();
                 if (outline == null)
                 {
                     outline = highlight.gameObject.AddComponent<Outline>();
-                    outline.OutlineColor = Color.magenta;
-                    outline.OutlineWidth = 7.0f;
                 }
+                outline.OutlineColor = highlightColor;
+                outline.OutlineWidth = highlightOutlineWidth;
                 outline.enabled = true;
             }
             else
@@ -36,28 +51,56 @@ public class OutlineSelection : MonoBehaviour
                 highlight = null;
             }
         }
+    }
 
-        // Selection
+    void HandleSelection()
+    {
         if (Input.GetMouseButtonDown(0))
         {
+            // Si hay un objeto resaltado, cambiar la selección
             if (highlight)
             {
-                if (selection != null)
+                // Restablecer el outline del objeto previamente seleccionado
+                if (currentSelection != null)
                 {
-                    selection.gameObject.GetComponent<Outline>().enabled = false;
+                    ResetSelection(currentSelection);
                 }
-                selection = raycastHit.transform;
-                selection.gameObject.GetComponent<Outline>().enabled = true;
-                //Debug.Log("Objeto seleccionado: " + selection.name);
+
+                // Asignar el nuevo objeto seleccionado
+                currentSelection = highlight;
+                Outline outline = currentSelection.gameObject.GetComponent<Outline>();
+                if (outline == null)
+                {
+                    outline = currentSelection.gameObject.AddComponent<Outline>();
+                }
+                outline.OutlineColor = selectionColor;
+                outline.OutlineWidth = selectionOutlineWidth;
+                outline.enabled = true;
+
                 highlight = null;
             }
+            // Si no hay un objeto resaltado, deseleccionar el objeto actual
             else
             {
-                if (selection)
+                if (currentSelection != null)
                 {
-                    selection.gameObject.GetComponent<Outline>().enabled = false;
-                    selection = null;
+                    ResetSelection(currentSelection);
+                    currentSelection = null;
                 }
+            }
+        }
+    }
+
+    void ResetSelection(Transform selection)
+    {
+        if (selection != null)
+        {
+            Outline outline = selection.gameObject.GetComponent<Outline>();
+            if (outline != null)
+            {
+                outline.enabled = false;
+                // Eliminar el componente Outline para evitar conflictos
+                Destroy(outline);
             }
         }
     }
