@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class OrbitCamera : MonoBehaviour
+public class Camara : MonoBehaviour
 {
     // Target de la camara para rotar alrededor
     public Vector3 _target = Vector3.zero;
@@ -16,7 +16,8 @@ public class OrbitCamera : MonoBehaviour
         _zoomSpeed = 90f,
         _yMinLimit = -20f,
         _yMaxLimit = 80f,
-        _lerpSpeed = 5f;
+        _lerpSpeed = 5f,
+        _distanceLerpSpeed = 5f; // Velocidad de interpolación de la distancia
 
     // Valores Clamp movimiento
     public Vector3 minFocus = new Vector3(-5f, -5f, -5f);
@@ -24,6 +25,9 @@ public class OrbitCamera : MonoBehaviour
     public Vector3 minmaxDistance = new Vector2(200f, 2500f);
 
     private float _x, _y;
+    private float lastClickTime = 0f;
+    private float doubleClickTime = 0.3f; // Tiempo máximo para detectar un doble clic
+    private float targetDistance; // Distancia objetivo para la interpolación
 
     private float ClampAngle(float angle, float min, float max)
     {
@@ -36,7 +40,11 @@ public class OrbitCamera : MonoBehaviour
 
     private void Start()
     {
-        SetTarget(focusItem.transform.position);
+        targetDistance = _distance;
+        if (focusItem != null)
+        {
+            SetTarget(focusItem.transform.position);
+        }
         _x = _xSpeed * 0.03f;
         _y = ClampAngle(_y, _yMinLimit, _yMaxLimit);
     }
@@ -61,6 +69,7 @@ public class OrbitCamera : MonoBehaviour
                 var num = (Mathf.Abs(axisX) <= Mathf.Abs(axisY)) ? axisY : axisX;
                 num = -num * _zoomSpeed * 0.03f;
                 _distance = Mathf.Clamp(_distance + num * (Mathf.Max(_distance, 0.02f) * 0.03f), minmaxDistance.x, minmaxDistance.y);
+                targetDistance = _distance; // Ignorar interpolacion
             }
             // ALT + MIDDLE CLICK = MOVER
             else if (Input.GetMouseButton(2))
@@ -74,11 +83,41 @@ public class OrbitCamera : MonoBehaviour
             }
         }
 
-        // Cambiar focus al pulsar la F (TODO: cuando este mejor programado poder clickar en edificios y que haga zoom en ellos)
+        // Cambiar focus al pulsar la F
         else if (Input.GetKey(KeyCode.F))
         {
-            SetTarget(focusItem.transform.position);
+            if (focusItem != null)
+            {
+                SetTarget(focusItem.transform.position);
+            }
         }
+
+        if (Input.GetMouseButtonDown(0))
+        {
+            if (Time.time - lastClickTime < doubleClickTime)
+            {
+                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                RaycastHit hit;
+                if (Physics.Raycast(ray, out hit))
+                {
+                    if (hit.transform.CompareTag("Selectable"))
+                    {
+                        // TODO: que haga zoom al objeto, pero tiene 0,0,0 dentro del padre, asi que ya vere
+                        ZoomToHitPoint(hit.point, hit.transform);
+                    }
+                }
+            }
+            lastClickTime = Time.time;
+        }
+
+        float scroll = Input.GetAxis("Mouse ScrollWheel");
+        if (scroll != 0.0f)
+        {
+            targetDistance = Mathf.Clamp(_distance - scroll * _zoomSpeed*10000 * Time.deltaTime, minmaxDistance.x, minmaxDistance.y);
+        }
+
+        // Actualizar la distancia de la cámara usando Lerp
+        UpdateCameraDistance();
 
         // Actualiza la posicion de la camara interpolando posicion vieja y nueva
         if(Vector3.Distance(_target, _newTarget)>0.1f)
@@ -99,6 +138,17 @@ public class OrbitCamera : MonoBehaviour
         _newTarget.x = Mathf.Clamp(target.x, minFocus.x, maxFocus.x);
         _newTarget.y = Mathf.Clamp(target.y, minFocus.y, maxFocus.y);
         _newTarget.z = Mathf.Clamp(target.z, minFocus.z, maxFocus.z);
+    }
 
+    public void ZoomToHitPoint(Vector3 hitPoint, Transform target)
+    {
+        focusItem = target.gameObject;
+        SetTarget(hitPoint);
+        targetDistance = Mathf.Clamp(20f, minmaxDistance.x, minmaxDistance.y); // Distancia de zoom deseada, ajusta según tu necesidad
+    }
+
+    private void UpdateCameraDistance()
+    {
+        _distance = Mathf.Lerp(_distance, targetDistance, _distanceLerpSpeed * Time.deltaTime);
     }
 }
