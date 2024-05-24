@@ -105,7 +105,18 @@ public class Camara : MonoBehaviour
                     {
                         // TODO: que haga zoom al objeto, pero tiene 0,0,0 dentro del padre, asi que ya vere
                         ZoomToHitPoint(hit.point, hit.transform);
-                        UIEdificios.MostrarInformacionEdificio(hit.transform.GetComponent<Edificio>());
+
+                        Edificio edificio = hit.transform.GetComponent<Edificio>();
+                        if(edificio != null)
+                        {
+                            UIEdificios.MostrarInformacionEdificio(edificio);
+                        }
+
+                        Papelera papelera = hit.transform.GetComponent<Papelera>();
+                        if(papelera != null)
+                        {
+                            papelera.VaciarPapelera();
+                        }
                     }
                 }
             }
