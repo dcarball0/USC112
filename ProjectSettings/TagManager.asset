@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Bus
   - Selectable
+  - Lluvia
   layers:
   - Default
   - TransparentFX

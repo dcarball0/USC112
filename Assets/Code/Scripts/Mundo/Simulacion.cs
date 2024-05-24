@@ -10,8 +10,15 @@ public class Simulacion : MonoBehaviour
     [SerializeField, Range(0, 100)] private float humedad;
     [SerializeField, Range(0, 500)] private int calidadAire; // Índice de calidad del aire (AQI)
 
+    // Variables para gestionar los días y la lluvia
+    [SerializeField] private GameObject lluviaPrefab;
+    public int diaActual;
+    public bool estaLloviendo;
+    public float probabilidadLluvia = 0.1f; // Probabilidad de lluvia (10%)
+    private Camera mainCamera;
+
     // Propiedades públicas para acceder a los valores desde otros scripts
-    public float TimeOfDay => timeOfDay;    
+    public float TimeOfDay => timeOfDay;
 
     // Datos históricos o modelos para simular variaciones
     private Dictionary<int, float> temperaturaPorHora;
@@ -20,6 +27,7 @@ public class Simulacion : MonoBehaviour
     private void Awake()
     {
         InicializarDatosClima();
+        mainCamera = Camera.main; // Obtener la cámara principal
     }
 
     private void Update()
@@ -55,7 +63,12 @@ public class Simulacion : MonoBehaviour
     {
         // Simular la hora del día
         timeOfDay += Time.deltaTime * Time.timeScale;
-        timeOfDay %= 24; // Asegurar que siempre esté entre 0-24
+        if (timeOfDay >= 24)
+        {
+            timeOfDay = 0;
+            diaActual++;
+            VerificarLluvia();
+        }
     }
 
     private void SimularClima()
@@ -68,7 +81,7 @@ public class Simulacion : MonoBehaviour
         SimularHumedad(horaActual);
 
         // Log para depuración
-        //Debug.Log($"Hora: {horaActual}, Temperatura: {temperatura}°C, Humedad: {humedad}%, Calidad del Aire: {calidadAire} AQI");
+        // Debug.Log($"Día: {diaActual}, Hora: {horaActual}, Temperatura: {temperatura}°C, Humedad: {humedad}%, Calidad del Aire: {calidadAire} AQI, Lluvia: {estaLloviendo}");
     }
 
     private void SimularHumedad(int horaActual)
@@ -80,6 +93,44 @@ public class Simulacion : MonoBehaviour
 
         humedad = baseHumedad + variacionDiurna + efectoTemperatura;
         humedad = Mathf.Clamp(humedad, 0f, 100f); // Asegurarse de que la humedad esté entre 0 y 100
+    }
+
+    private void VerificarLluvia()
+    {
+        // Determinar si llueve hoy basado en la probabilidad
+        estaLloviendo = Random.value < probabilidadLluvia;
+
+        if (estaLloviendo)
+        {
+            InstanciarLluvia();
+        }
+        else
+        {
+            DetenerLluvia();
+        }
+    }
+
+    private void InstanciarLluvia()
+    {
+        if (lluviaPrefab != null)
+        {
+            GameObject lluvia = Instantiate(lluviaPrefab, mainCamera.transform.position, Quaternion.identity, mainCamera.transform);
+            lluvia.transform.rotation = Quaternion.Euler(90, 0, 0);
+            lluvia.tag = "Lluvia";
+            mainCamera.GetComponent<LluviaSeguirCamara>().rainParticleSystem = lluvia;
+        }
+    }
+
+    private void DetenerLluvia()
+    {
+        // Destruir el prefab de lluvia si está activo
+        foreach (Transform child in transform)
+        {
+            if (child.CompareTag("Lluvia"))
+            {
+                Destroy(child.gameObject);
+            }
+        }
     }
 
     public float GetTemperatura()
@@ -94,4 +145,12 @@ public class Simulacion : MonoBehaviour
     {
         return calidadAire;
     }   
+    public int GetDiaActual()
+    {
+        return diaActual;
+    }
+    public bool GetEstaLloviendo()
+    {
+        return estaLloviendo;
+    }
 }
