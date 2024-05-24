@@ -24,10 +24,13 @@ public class Simulacion : MonoBehaviour
     private Dictionary<int, float> temperaturaPorHora;
     private Dictionary<int, int> calidadAirePorHora;
 
+    private GestionBasura gestionBasura;
+
     private void Awake()
     {
         InicializarDatosClima();
         mainCamera = Camera.main; // Obtener la cámara principal
+        gestionBasura = GetComponent<GestionBasura>();
     }
 
     private void Update()
@@ -152,5 +155,10 @@ public class Simulacion : MonoBehaviour
     public bool GetEstaLloviendo()
     {
         return estaLloviendo;
+    }
+
+    public float GetGestionBasura()
+    {
+        return gestionBasura.GetNivelMedioBasura();
     }
 }

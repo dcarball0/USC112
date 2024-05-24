@@ -29,4 +29,9 @@ public class GestionBasura : MonoBehaviour
 
         return papeleras.Count > 0 ? sumaNiveles / papeleras.Count : 0f;
     }
+
+    public float GetNivelMedioBasura()
+    {
+        return nivelMedioBasura;
+    }
 }

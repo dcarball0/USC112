@@ -16,6 +16,9 @@
             <ui:VisualElement name="CalidadAire" style="flex-grow: 1; max-width: 60px; min-width: 60px; justify-content: center; align-items: center;">
                 <ui:Label tabindex="-1" text="20 AQI" parse-escape-sequences="true" display-tooltip-when-elided="true" name="CalidadAireLabel" />
             </ui:VisualElement>
+            <ui:VisualElement name="GestionBasura" style="flex-grow: 1; max-width: 60px; min-width: 60px; justify-content: center; align-items: center;">
+                <ui:Label tabindex="-1" text="20%" parse-escape-sequences="true" display-tooltip-when-elided="true" name="GestionBasuraLabel" />
+            </ui:VisualElement>
         </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>
