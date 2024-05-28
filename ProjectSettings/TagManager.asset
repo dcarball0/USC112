@@ -5,6 +5,8 @@ TagManager:
   serializedVersion: 2
   tags:
   - Bus
+  - Selectable
+  - Lluvia
   layers:
   - Default
   - TransparentFX
