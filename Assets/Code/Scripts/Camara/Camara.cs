@@ -30,6 +30,9 @@ public class Camara : MonoBehaviour
     private float doubleClickTime = 0.3f; // Tiempo máximo para detectar un doble clic
     private float targetDistance; // Distancia objetivo para la interpolación
 
+    private GameObject cocheSeleccionado;
+    private bool isFollowingCoche = false;
+
     private float ClampAngle(float angle, float min, float max)
     {
         if (angle < -360f)
@@ -52,6 +55,12 @@ public class Camara : MonoBehaviour
 
     private void LateUpdate()
     {
+        if (isFollowingCoche && cocheSeleccionado != null)
+        {
+            SetTarget(cocheSeleccionado.transform.position);
+            //targetDistance = 20f; // Ajusta esta distancia según sea necesario para el zoom
+        }
+
         if (Input.GetKey(KeyCode.LeftAlt))
         {
             var axisX = Input.GetAxis("Mouse X");
@@ -87,10 +96,15 @@ public class Camara : MonoBehaviour
         // Cambiar focus al pulsar la F
         else if (Input.GetKey(KeyCode.F))
         {
+            isFollowingCoche = false; // Detener el seguimiento del coche cuando se usa otro input de la cámara
             if (focusItem != null)
             {
                 SetTarget(focusItem.transform.position);
             }
+        }
+        else if (Input.GetKey(KeyCode.Space))
+        {
+            isFollowingCoche = false; // Detener el seguimiento del coche cuando se usa otro input de la cámara
         }
 
         if (Input.GetMouseButtonDown(0))
@@ -101,8 +115,10 @@ public class Camara : MonoBehaviour
                 RaycastHit hit;
                 if (Physics.Raycast(ray, out hit))
                 {
+                    // Si es edificio o papelera
                     if (hit.transform.CompareTag("Selectable"))
                     {
+                        isFollowingCoche = false; // Detener el seguimiento del coche cuando se usa otro input de la cámara
                         // TODO: que haga zoom al objeto, pero tiene 0,0,0 dentro del padre, asi que ya vere
                         ZoomToHitPoint(hit.point, hit.transform);
 
@@ -117,6 +133,13 @@ public class Camara : MonoBehaviour
                         {
                             papelera.VaciarPapelera();
                         }
+                    }
+                    else if (hit.transform.GetComponent<RutasTrafico>() != null)
+                    {
+                        cocheSeleccionado = hit.transform.gameObject;
+                        isFollowingCoche = true;
+
+                        ZoomToHitPoint(hit.point, hit.transform);
                     }
                 }
             }
@@ -163,5 +186,11 @@ public class Camara : MonoBehaviour
     private void UpdateCameraDistance()
     {
         _distance = Mathf.Lerp(_distance, targetDistance, _distanceLerpSpeed * Time.deltaTime);
+    }
+
+    public void CocheSeleccionado(GameObject coche)
+    {
+        cocheSeleccionado = coche;
+        isFollowingCoche = true;
     }
 }
