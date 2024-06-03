@@ -19,6 +19,12 @@
             <ui:VisualElement name="GestionBasura" style="flex-grow: 1; max-width: 60px; min-width: 60px; justify-content: center; align-items: center;">
                 <ui:Label tabindex="-1" text="20%" parse-escape-sequences="true" display-tooltip-when-elided="true" name="GestionBasuraLabel" />
             </ui:VisualElement>
+            <ui:VisualElement name="Coches" style="flex-grow: 1; max-width: 60px; min-width: 60px; justify-content: center; align-items: center;">
+                <ui:Label tabindex="0" text="C: 0" parse-escape-sequences="true" display-tooltip-when-elided="true" name="CochesLabel" />
+            </ui:VisualElement>
+            <ui:VisualElement name="Peatones" style="flex-grow: 1; max-width: 60px; min-width: 60px; justify-content: center; align-items: center;">
+                <ui:Label tabindex="0" text="P: 0" parse-escape-sequences="true" display-tooltip-when-elided="true" name="PeatonesLabel" />
+            </ui:VisualElement>
         </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>
