@@ -70,6 +70,7 @@ public class UIManager : MonoBehaviour
     private void LateUpdate()
     {
         dayBar.value = lightingManager.GetTimeOfDay();
+        dayBar.title = $"{sceneManager.GetComponent<Simulacion>().GetDate():dd/MM/yyyy}";
         temperaturaLabel.text = $"{sceneManager.GetComponent<Simulacion>().GetTemperatura()}°C";
         humedadLabel.text = $"{sceneManager.GetComponent<Simulacion>().GetHumedad():F1}%";
         calidadAireLabel.text = $"{sceneManager.GetComponent<Simulacion>().GetCalidadAire()} AQI";

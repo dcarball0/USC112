@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 [ExecuteAlways]
 public class Simulacion : MonoBehaviour
@@ -17,6 +18,8 @@ public class Simulacion : MonoBehaviour
     public float probabilidadLluvia = 0.1f; // Probabilidad de lluvia (10%)
     private Camera mainCamera;
 
+    public DateTime currentDate;
+
     // Propiedades públicas para acceder a los valores desde otros scripts
     public float TimeOfDay => timeOfDay;
 
@@ -31,6 +34,10 @@ public class Simulacion : MonoBehaviour
         InicializarDatosClima();
         mainCamera = Camera.main; // Obtener la cámara principal
         gestionBasura = GetComponent<GestionBasura>();
+
+        // Inicializar la fecha actual con la fecha del sistema
+        currentDate = DateTime.Now;
+        diaActual = currentDate.DayOfYear;
     }
 
     private void Update()
@@ -70,6 +77,7 @@ public class Simulacion : MonoBehaviour
         {
             timeOfDay = 0;
             diaActual++;
+            currentDate = currentDate.AddDays(1); // Sumar un día a la fecha actual
             VerificarLluvia();
         }
     }
@@ -84,7 +92,7 @@ public class Simulacion : MonoBehaviour
         SimularHumedad(horaActual);
 
         // Log para depuración
-        // Debug.Log($"Día: {diaActual}, Hora: {horaActual}, Temperatura: {temperatura}°C, Humedad: {humedad}%, Calidad del Aire: {calidadAire} AQI, Lluvia: {estaLloviendo}");
+        // Debug.Log($"Día: {diaActual}, Fecha: {currentDate.ToShortDateString()}, Hora: {horaActual}, Temperatura: {temperatura}°C, Humedad: {humedad}%, Calidad del Aire: {calidadAire} AQI, Lluvia: {estaLloviendo}");
     }
 
     private void SimularHumedad(int horaActual)
@@ -101,7 +109,7 @@ public class Simulacion : MonoBehaviour
     private void VerificarLluvia()
     {
         // Determinar si llueve hoy basado en la probabilidad
-        estaLloviendo = Random.value < probabilidadLluvia;
+        estaLloviendo = UnityEngine.Random.value < probabilidadLluvia;
 
         if (estaLloviendo)
         {
@@ -160,5 +168,10 @@ public class Simulacion : MonoBehaviour
     public float GetGestionBasura()
     {
         return gestionBasura.GetNivelMedioBasura();
+    }
+
+    public DateTime GetDate()
+    {
+        return currentDate;
     }
 }
