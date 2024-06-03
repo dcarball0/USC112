@@ -6,10 +6,12 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject sceneManager;
     private CicloDiaNoche lightingManager;
     private Niveles niveles;
+    private GestionTrafico gestionTrafico;
+    private GestionPeatones gestionPeatones;
 
     ProgressBar dayBar;
     Button timeScaleButton, contaminacionAmbientalButton, contaminacionAcusticaButton, consumoAguaButton, consumoElectricidadButton;
-    Label temperaturaLabel, humedadLabel, calidadAireLabel, gestionBasuraLabel;
+    Label temperaturaLabel, humedadLabel, calidadAireLabel, gestionBasuraLabel, cochesLabel, peatonesLabel;
 
     // Instancia Singleton para acceso fácil
     public static UIManager Instance { get; private set; }
@@ -31,6 +33,8 @@ public class UIManager : MonoBehaviour
         // Referencias a scripts
         lightingManager = sceneManager.GetComponent<CicloDiaNoche>();
         niveles = sceneManager.GetComponent<Niveles>();
+        gestionTrafico = sceneManager.GetComponent<GestionTrafico>();
+        gestionPeatones = sceneManager.GetComponent<GestionPeatones>();
 
         UIDocument uiDocument = GetComponent<UIDocument>();
         VisualElement root = uiDocument.rootVisualElement;
@@ -56,6 +60,8 @@ public class UIManager : MonoBehaviour
         humedadLabel = root.Q<Label>(name: "HumedadLabel");
         calidadAireLabel = root.Q<Label>(name: "CalidadAireLabel");
         gestionBasuraLabel = root.Q<Label>(name: "GestionBasuraLabel");
+        cochesLabel = root.Q<Label>(name: "CochesLabel");
+        peatonesLabel = root.Q<Label>(name: "PeatonesLabel");
 
         if (dayBar == null)
         {
@@ -75,5 +81,7 @@ public class UIManager : MonoBehaviour
         humedadLabel.text = $"{sceneManager.GetComponent<Simulacion>().GetHumedad():F1}%";
         calidadAireLabel.text = $"{sceneManager.GetComponent<Simulacion>().GetCalidadAire()} AQI";
         gestionBasuraLabel.text = $"{sceneManager.GetComponent<Simulacion>().GetGestionBasura():F1}%";
+        cochesLabel.text = $"C: {gestionTrafico.GetNumeroCoches()}";
+        peatonesLabel.text = $"P: {gestionPeatones.GetNumeroPeatones()}";
     }
 }

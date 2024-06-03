@@ -16,7 +16,7 @@ public class GestionTrafico : MonoBehaviour
     [SerializeField] float intervaloSpawn = 60f; // Intervalo de tiempo para instanciar nuevos coches
     [SerializeField] Transform padreSpawn; // Lista de puntos de spawn para los coches
 
-    private HashSet<Transform> puntosSpawnOcupados = new HashSet<Transform>();
+    public int numeroCochesActual = 0;
 
     void Start()
     {
@@ -55,6 +55,8 @@ public class GestionTrafico : MonoBehaviour
         {
             rutaBus.SetWayPoints(rutaSeleccionada);
         }
+
+        numeroCochesActual++;
     }
 
     IEnumerator RutinaSpawnCoches()
@@ -67,6 +69,11 @@ public class GestionTrafico : MonoBehaviour
             // Instanciar un coche aleatorio
             InstanciarCocheAleatorio();
         }
+    }
+
+    public int GetNumeroCoches()
+    {
+        return numeroCochesActual;
     }
     
 }

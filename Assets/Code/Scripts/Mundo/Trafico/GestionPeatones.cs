@@ -10,6 +10,8 @@ public class GestionPeatones : MonoBehaviour
     [SerializeField] float intervaloSpawn = 10f; // Intervalo de tiempo para instanciar nuevos peatones
     [SerializeField] Transform padreSpawn; // Transform padre para los peatones
 
+    public int numeroPeatonesActual = 0;
+
     void Start()
     {
         // Instanciar peatones iniciales
@@ -47,6 +49,8 @@ public class GestionPeatones : MonoBehaviour
         {
             rutaPeaton.SetWayPoints(rutaSeleccionada);
         }
+
+        numeroPeatonesActual++;
     }
 
     IEnumerator RutinaSpawnPeatones()
@@ -59,5 +63,10 @@ public class GestionPeatones : MonoBehaviour
             // Instanciar un peatón aleatorio
             InstanciarPeatonAleatorio();
         }
+    }
+
+    public int GetNumeroPeatones()
+    {
+        return numeroPeatonesActual;
     }
 }
