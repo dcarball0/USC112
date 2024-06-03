@@ -109,7 +109,7 @@ public class RutasTrafico : MonoBehaviour
         Camara camara = Camera.main.GetComponent<Camara>();
         if (camara != null)
         {
-            camara.CocheSeleccionado(gameObject);
+            camara.SeleccionarElemento(gameObject);
         }
     }
 

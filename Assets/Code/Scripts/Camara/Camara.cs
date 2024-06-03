@@ -30,8 +30,8 @@ public class Camara : MonoBehaviour
     private float doubleClickTime = 0.3f; // Tiempo máximo para detectar un doble clic
     private float targetDistance; // Distancia objetivo para la interpolación
 
-    private GameObject cocheSeleccionado;
-    private bool isFollowingCoche = false;
+    private GameObject elementoSeleccionado;
+    private bool isFollowingElemento = false;
 
     private float ClampAngle(float angle, float min, float max)
     {
@@ -55,9 +55,9 @@ public class Camara : MonoBehaviour
 
     private void LateUpdate()
     {
-        if (isFollowingCoche && cocheSeleccionado != null)
+        if (isFollowingElemento && elementoSeleccionado != null)
         {
-            SetTarget(cocheSeleccionado.transform.position);
+            SetTarget(elementoSeleccionado.transform.position);
             //targetDistance = 20f; // Ajusta esta distancia según sea necesario para el zoom
         }
 
@@ -96,7 +96,7 @@ public class Camara : MonoBehaviour
         // Cambiar focus al pulsar la F
         else if (Input.GetKey(KeyCode.F))
         {
-            isFollowingCoche = false; // Detener el seguimiento del coche cuando se usa otro input de la cámara
+            SeleccionarElemento(null); // Detener el seguimiento del coche cuando se usa otro input de la cámara
             if (focusItem != null)
             {
                 SetTarget(focusItem.transform.position);
@@ -104,7 +104,7 @@ public class Camara : MonoBehaviour
         }
         else if (Input.GetKey(KeyCode.Space))
         {
-            isFollowingCoche = false; // Detener el seguimiento del coche cuando se usa otro input de la cámara
+            SeleccionarElemento(null);
         }
 
         if (Input.GetMouseButtonDown(0))
@@ -118,7 +118,7 @@ public class Camara : MonoBehaviour
                     // Si es edificio o papelera
                     if (hit.transform.CompareTag("Selectable"))
                     {
-                        isFollowingCoche = false; // Detener el seguimiento del coche cuando se usa otro input de la cámara
+                        SeleccionarElemento(null);
                         // TODO: que haga zoom al objeto, pero tiene 0,0,0 dentro del padre, asi que ya vere
                         ZoomToHitPoint(hit.point, hit.transform);
 
@@ -134,11 +134,16 @@ public class Camara : MonoBehaviour
                             papelera.VaciarPapelera();
                         }
                     }
-                    else if (hit.transform.GetComponent<RutasTrafico>() != null)
+                    else if (hit.transform.GetComponent<Coche>() != null)
                     {
-                        cocheSeleccionado = hit.transform.gameObject;
-                        isFollowingCoche = true;
-
+                        SeleccionarElemento(hit.transform.gameObject);
+                        
+                        ZoomToHitPoint(hit.point, hit.transform);
+                    }
+                    else if (hit.transform.GetComponent<Peaton>() != null)
+                    {
+                        SeleccionarElemento(hit.transform.gameObject);
+                        
                         ZoomToHitPoint(hit.point, hit.transform);
                     }
                 }
@@ -188,9 +193,34 @@ public class Camara : MonoBehaviour
         _distance = Mathf.Lerp(_distance, targetDistance, _distanceLerpSpeed * Time.deltaTime);
     }
 
-    public void CocheSeleccionado(GameObject coche)
+    public void SeleccionarElemento(GameObject elemento)
     {
-        cocheSeleccionado = coche;
-        isFollowingCoche = true;
+        // Verificar si hay un elemento previamente seleccionado
+        if (elementoSeleccionado != null)
+        {
+            Coche coche = elementoSeleccionado.GetComponent<Coche>();
+            Peaton peaton = elementoSeleccionado.GetComponent<Peaton>();
+
+            if (coche != null) coche.SetFocus(false);
+            else if (peaton != null) peaton.SetFocus(false);
+        }
+
+        elementoSeleccionado = elemento;
+
+        // Verificar si vamos a elemnto no seleccionable
+        if (elementoSeleccionado != null)
+        {
+            Coche coche = elementoSeleccionado.GetComponent<Coche>();
+            Peaton peaton = elementoSeleccionado.GetComponent<Peaton>();
+
+            if (coche != null) coche.SetFocus(true);
+            else if (peaton != null) peaton.SetFocus(true);
+
+            isFollowingElemento = true;
+        }
+        else
+        {
+            isFollowingElemento = false;
+        }
     }
 }
