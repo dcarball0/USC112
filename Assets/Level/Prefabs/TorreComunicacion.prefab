@@ -4901,10 +4901,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sphereCollider: {fileID: 0}
   textMesh: {fileID: 0}
+  particleSystem: {fileID: 0}
   layerMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 8
   isTextVisible: 0
+  isParticleVisible: 0
 --- !u!1 &6996793792995063180
 GameObject:
   m_ObjectHideFlags: 0
