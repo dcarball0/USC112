@@ -264,7 +264,7 @@ GameObject:
   - component: {fileID: 5050938557213970757}
   m_Layer: 0
   m_Name: CocheRojo
-  m_TagString: Untagged
+  m_TagString: Selectable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -307,6 +307,7 @@ MonoBehaviour:
   rotationSpeed: 10
   deviationDistance: -3
   deviateRight: 1
+  busStopTime: 10
 --- !u!65 &6877016615428957454
 BoxCollider:
   m_ObjectHideFlags: 0

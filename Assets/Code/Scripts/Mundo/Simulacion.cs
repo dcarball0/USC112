@@ -22,6 +22,7 @@ public class Simulacion : MonoBehaviour
 
     // Propiedades públicas para acceder a los valores desde otros scripts
     public float TimeOfDay => timeOfDay;
+    public bool isNight = false;
 
     // Datos históricos o modelos para simular variaciones
     private Dictionary<int, float> temperaturaPorHora;
@@ -73,6 +74,14 @@ public class Simulacion : MonoBehaviour
     {
         // Simular la hora del día
         timeOfDay += Time.deltaTime * Time.timeScale;
+        if(timeOfDay < 8 || timeOfDay > 18)
+        {
+            isNight = false;
+        }
+        else
+        {
+            isNight = true;
+        }
         if (timeOfDay >= 24)
         {
             timeOfDay = 0;

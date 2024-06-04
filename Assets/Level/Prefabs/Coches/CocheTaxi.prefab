@@ -540,7 +540,7 @@ GameObject:
   - component: {fileID: 6179463556261861305}
   m_Layer: 0
   m_Name: CocheTaxi
-  m_TagString: Untagged
+  m_TagString: Selectable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -583,6 +583,7 @@ MonoBehaviour:
   rotationSpeed: 10
   deviationDistance: -3
   deviateRight: 1
+  busStopTime: 10
 --- !u!65 &3188754266705941284
 BoxCollider:
   m_ObjectHideFlags: 0

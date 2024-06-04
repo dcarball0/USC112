@@ -347,7 +347,7 @@ GameObject:
   - component: {fileID: 1546659800781313068}
   m_Layer: 0
   m_Name: CocheAzul
-  m_TagString: Untagged
+  m_TagString: Selectable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -390,6 +390,7 @@ MonoBehaviour:
   rotationSpeed: 10
   deviationDistance: -3
   deviateRight: 1
+  busStopTime: 10
 --- !u!65 &9112175866394786138
 BoxCollider:
   m_ObjectHideFlags: 0

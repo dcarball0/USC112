@@ -6,6 +6,7 @@ public class Camara : MonoBehaviour
     public Vector3 _target = Vector3.zero;
     private Vector3 _newTarget = Vector3.zero;
     public GameObject focusItem;
+    public GameObject CIBUS;
     public UIEdificios UIEdificios;
 
     // Valores de velocidad  
@@ -99,7 +100,7 @@ public class Camara : MonoBehaviour
             SeleccionarElemento(null); // Detener el seguimiento del coche cuando se usa otro input de la cámara
             if (focusItem != null)
             {
-                SetTarget(focusItem.transform.position);
+                SetTarget(CIBUS.transform.position);
             }
         }
         else if (Input.GetKey(KeyCode.Space))
@@ -116,7 +117,7 @@ public class Camara : MonoBehaviour
                 if (Physics.Raycast(ray, out hit))
                 {
                     // Si es edificio o papelera
-                    if (hit.transform.CompareTag("Selectable"))
+                    if (hit.transform.CompareTag("Selectable") || hit.transform.CompareTag("Bus"))
                     {
                         SeleccionarElemento(null);
                         // TODO: que haga zoom al objeto, pero tiene 0,0,0 dentro del padre, asi que ya vere
@@ -140,13 +141,13 @@ public class Camara : MonoBehaviour
                         //    torre.(true);
                         //}
                     }
-                    else if (hit.transform.GetComponent<Coche>() != null)
+                    if (hit.transform.GetComponent<Coche>() != null)
                     {
                         SeleccionarElemento(hit.transform.gameObject);
                         
                         ZoomToHitPoint(hit.point, hit.transform);
                     }
-                    else if (hit.transform.GetComponent<Peaton>() != null)
+                    if (hit.transform.GetComponent<Peaton>() != null)
                     {
                         SeleccionarElemento(hit.transform.gameObject);
                         
