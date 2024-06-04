@@ -8,9 +8,10 @@ public class UIManager : MonoBehaviour
     private Niveles niveles;
     private GestionTrafico gestionTrafico;
     private GestionPeatones gestionPeatones;
+    private GestionTorresConexion gestionTorresConexion;
 
     ProgressBar dayBar;
-    Button timeScaleButton, contaminacionAmbientalButton, contaminacionAcusticaButton, consumoAguaButton, consumoElectricidadButton;
+    Button timeScaleButton, contaminacionAmbientalButton, contaminacionAcusticaButton, consumoAguaButton, consumoElectricidadButton, conexionButton;
     Label temperaturaLabel, humedadLabel, calidadAireLabel, gestionBasuraLabel, cochesLabel, peatonesLabel;
 
     // Instancia Singleton para acceso fácil
@@ -35,6 +36,7 @@ public class UIManager : MonoBehaviour
         niveles = sceneManager.GetComponent<Niveles>();
         gestionTrafico = sceneManager.GetComponent<GestionTrafico>();
         gestionPeatones = sceneManager.GetComponent<GestionPeatones>();
+        gestionTorresConexion = sceneManager.GetComponent<GestionTorresConexion>();
 
         UIDocument uiDocument = GetComponent<UIDocument>();
         VisualElement root = uiDocument.rootVisualElement;
@@ -55,6 +57,9 @@ public class UIManager : MonoBehaviour
 
         consumoElectricidadButton = root.Q<Button>(name: "ConsumoElectricidadButton");
         consumoElectricidadButton.RegisterCallback<ClickEvent>(niveles.ToggleConsumoElectrico);
+
+        conexionButton = root.Q<Button>(name: "ConexionButton");
+        conexionButton.RegisterCallback<ClickEvent>(gestionTorresConexion.ToggleConexion);
 
         temperaturaLabel = root.Q<Label>(name: "TemperaturaLabel");
         humedadLabel = root.Q<Label>(name: "HumedadLabel");

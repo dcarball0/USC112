@@ -133,6 +133,12 @@ public class Camara : MonoBehaviour
                         {
                             papelera.VaciarPapelera();
                         }
+
+                        //TorreComunicacion torre = hit.transform.GetComponent<TorreComunicacion>();
+                        //if(torre != null)
+                        //{
+                        //    torre.(true);
+                        //}
                     }
                     else if (hit.transform.GetComponent<Coche>() != null)
                     {

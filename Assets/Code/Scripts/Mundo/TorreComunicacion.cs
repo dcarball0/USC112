@@ -6,7 +6,11 @@ public class TorreComunicacion : MonoBehaviour
 {
     [SerializeField] private SphereCollider sphereCollider; // Collider de la torre
     [SerializeField] private TextMesh textMesh; // TextMesh para mostrar el número de peatones conectados
+    [SerializeField] private ParticleSystem particleSystem; // Partículas de la torre
     [SerializeField] private LayerMask layerMask; // Máscara de capa para filtrar los peatones
+
+    [SerializeField] private bool isTextVisible = false; // Visibilidad del texto
+    [SerializeField] private bool isParticleVisible = false; // Visibilidad de las partículas
 
     void Start()
     {
@@ -19,18 +23,30 @@ public class TorreComunicacion : MonoBehaviour
         {
             textMesh = GetComponentInChildren<TextMesh>();
         }
+        if (particleSystem == null)
+        {
+            particleSystem = GetComponentInChildren<ParticleSystem>();
+        }
 
         if (sphereCollider == null || textMesh == null)
         {
             Debug.LogError("Falta asignar SphereCollider o TextMesh en la Torre de Comunicación.");
             enabled = false;
         }
+        else
+        {
+            textMesh.gameObject.SetActive(isTextVisible);
+            particleSystem.Stop();
+        }
     }
 
     void Update()
     {
-        int numberOfPeatones = GetNumberOfPeatonesInside();
-        UpdateTextMesh(numberOfPeatones);
+        if (isTextVisible)
+        {
+            int numberOfPeatones = GetNumberOfPeatonesInside();
+            UpdateTextMesh(numberOfPeatones);
+        }
     }
 
     int GetNumberOfPeatonesInside()
@@ -58,5 +74,27 @@ public class TorreComunicacion : MonoBehaviour
     void UpdateTextMesh(int numberOfPeatones)
     {
         textMesh.text = "Conectados: " + numberOfPeatones;
+    }
+
+    public void ToggleTextVisibility()
+    {
+        isTextVisible = !isTextVisible;
+        textMesh.gameObject.SetActive(isTextVisible);
+    }
+
+    public void ToggleParticleVisibility()
+    {
+        if (particleSystem != null)
+        {
+            isParticleVisible = particleSystem.isPlaying;
+            if (isParticleVisible)
+            {
+                particleSystem.Stop();
+            }
+            else
+            {
+                particleSystem.Play();
+            }
+        }
     }
 }
