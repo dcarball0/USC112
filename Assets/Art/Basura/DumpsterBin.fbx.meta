@@ -3,7 +3,47 @@ guid: ee234d72564e2d24ba75037a7599fb2a
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: BracketLeft1
+    second: {fileID: 2100000, guid: 0ffe430c3220da241bbb7be7c2420937, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: BracketRight1
+    second: {fileID: 2100000, guid: cb2a69861bab5c6448e715ab0e2313b3, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Dumpster1
+    second: {fileID: 2100000, guid: 693c10ede3590e74f80e1b59fb7503ea, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Hardware
+    second: {fileID: 2100000, guid: c800a502663d8614c8b928cb620ba0d7, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Signs
+    second: {fileID: 2100000, guid: 313679a4639b3d14aac8b55a6eb2ae5f, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: TopLid
+    second: {fileID: 2100000, guid: a91cdd1da02f20e4180daa6c153633fa, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: WheelBracket1
+    second: {fileID: 2100000, guid: a110787f8083d3447a32b0a4724a1e59, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Wheels
+    second: {fileID: 2100000, guid: 39331755bc177bd439b1f66c068db428, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
