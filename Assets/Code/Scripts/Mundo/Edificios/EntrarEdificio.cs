@@ -40,7 +40,7 @@ public class EntrarEdificio : MonoBehaviour
             {
                 _edificio.IncrementarCantidadPeatones();
                 Destroy(other.gameObject); // Eliminar el coche
-                _gestionTrafico.InstanciarCocheAleatorio(); // Instanciar un nuevo coche en un lugar aleatorio
+                _gestionPeatones.InstanciarPeatonAleatorio(); // Instanciar un nuevo coche en un lugar aleatorio
             }
         }
     }
