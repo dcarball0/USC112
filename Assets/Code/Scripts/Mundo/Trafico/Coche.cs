@@ -35,7 +35,15 @@ public class Coche : MonoBehaviour
         {
             // Inicialmente ocultar el TextMesh
             textMesh.gameObject.SetActive(false);
-            textMesh.text = $"{matricula} - {tipo.ToString()}"; // Asignar la matrícula y el tipo al TextMesh
+            if(GetComponent<Bus>() != null)
+            {
+                SetText($"{matricula} - P:{GetComponent<Bus>().getCantidadPeatones().ToString()}"); // Asignar la matrícula y numero personas si es bus
+            }
+            else
+            {
+                SetText($"{matricula} - {tipo.ToString()}"); // Asignar la matrícula y el tipo al TextMesh
+            }
+            
         }
         else
         {
@@ -51,6 +59,22 @@ public class Coche : MonoBehaviour
         if (textMesh != null)
         {
             textMesh.gameObject.SetActive(isFocus);
+        }
+    }
+
+    public void SetText(string text)
+    {
+        if (textMesh != null)
+        {
+            textMesh.text = text;
+        }
+    }
+
+    public void SetTextActive(bool active)
+    {
+        if (textMesh != null)
+        {
+            textMesh.gameObject.SetActive(active);
         }
     }
 }

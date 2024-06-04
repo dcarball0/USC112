@@ -11,8 +11,11 @@ public class RutasTrafico : MonoBehaviour
           rotationSpeed = 10f;
     [SerializeField] float deviationDistance = 1f; // Distancia fija de desviación
     [SerializeField] bool deviateRight = true; // Elige si desviarse a la derecha o izquierda desde el Inspector
+    [SerializeField] float busStopTime = 10f; // Tiempo que el autobús se queda en la marquesina
+
 
     int waypointIndex = 0;
+    bool isStopped = false;
 
     void Start()
     {
@@ -30,7 +33,7 @@ public class RutasTrafico : MonoBehaviour
 
     void Update()
     {
-        if (waypointIndex < deviatedPositions.Count)
+        if (!isStopped && waypointIndex < deviatedPositions.Count)
         {
             MoveTowardsWaypoint();
         }
@@ -79,10 +82,23 @@ public class RutasTrafico : MonoBehaviour
 
         if (Vector3.Distance(transform.position, targetPosition) < 1)
         {
+            // Verificar si el waypoint actual es una marquesina
+            if (wayPoints[waypointIndex].CompareTag("ParadaBus"))
+            {
+                StartCoroutine(StopAtBusStop());
+            }
+
             waypointIndex += 1;
             if (waypointIndex >= deviatedPositions.Count)
                 waypointIndex = 0;
         }
+    }
+
+    IEnumerator StopAtBusStop()
+    {
+        isStopped = true;
+        yield return new WaitForSeconds(busStopTime); // Esperar el tiempo definido en la marquesina
+        isStopped = false;
     }
 
     public void SetWayPoints(List<Transform> wayPoints)
