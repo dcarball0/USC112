@@ -12,10 +12,11 @@ public class RutasTrafico : MonoBehaviour
     [SerializeField] float deviationDistance = 1f; // Distancia fija de desviación
     [SerializeField] bool deviateRight = true; // Elige si desviarse a la derecha o izquierda desde el Inspector
     [SerializeField] float busStopTime = 10f; // Tiempo que el autobús se queda en la marquesina
-
+    [SerializeField] Transform entryWaypoint; // Waypoint de entrada al edificio
 
     int waypointIndex = 0;
     bool isStopped = false;
+    bool isEnteringBuilding = false;
 
     void Start()
     {
@@ -33,7 +34,7 @@ public class RutasTrafico : MonoBehaviour
 
     void Update()
     {
-        if (!isStopped && waypointIndex < deviatedPositions.Count)
+        if (!isStopped && !isEnteringBuilding && waypointIndex < deviatedPositions.Count)
         {
             MoveTowardsWaypoint();
         }
@@ -64,7 +65,7 @@ public class RutasTrafico : MonoBehaviour
             deviatedPositions.Add(deviatedPosition);
         }
     }
-    
+
     Vector3 GetRandomPointBetweenWaypoints(int index1, int index2)
     {
         Vector3 point1 = deviatedPositions[index1];
@@ -135,5 +136,26 @@ public class RutasTrafico : MonoBehaviour
         {
             wayPoints.Reverse();
         }
+    }
+
+    public void EnterBuilding(Transform targetWaypoint)
+    {
+        if (!isEnteringBuilding)
+        {
+            StartCoroutine(MoveToWaypointAndEnter(targetWaypoint));
+        }
+    }
+
+    IEnumerator MoveToWaypointAndEnter(Transform targetWaypoint)
+    {
+        isEnteringBuilding = true;
+        while (Vector3.Distance(transform.position, targetWaypoint.position) > 0.1f)
+        {
+            Vector3 directionToTarget = targetWaypoint.position - transform.position;
+            transform.position = Vector3.MoveTowards(transform.position, targetWaypoint.position, moveSpeed * Time.deltaTime);
+            transform.rotation = Quaternion.LookRotation(Vector3.RotateTowards(transform.forward, directionToTarget, rotationSpeed * Time.deltaTime, 0.0f));
+            yield return null;
+        }
+        Destroy(gameObject); // Eliminar el objeto después de llegar al waypoint
     }
 }

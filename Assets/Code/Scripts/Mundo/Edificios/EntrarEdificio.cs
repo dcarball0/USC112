@@ -10,25 +10,33 @@ public class EntrarEdificio : MonoBehaviour
     GestionTrafico _gestionTrafico;
     GestionPeatones _gestionPeatones;
     [SerializeField] [Range(0, 100)] float probabilidadCoche = 10f; // Porcentaje de probabilidad de entrar al edificio
-    
+    [SerializeField] Transform entryWaypoint; // Waypoint al que deben moverse los objetos
+
     void Start()
     {
         _edificio = edificio.GetComponent<Edificio>();
         _gestionTrafico = sceneManager.GetComponent<GestionTrafico>();
         _gestionPeatones = sceneManager.GetComponent<GestionPeatones>();
+
+        if (entryWaypoint == null)
+        {
+            Debug.LogError("Waypoint no asignado en el objeto EntrarEdificio.");
+        }
     }
 
     void OnTriggerEnter(Collider other)
     {
-        //Debug.Log("Colisión con " + other.name);
-        // Si el objeto que colisiona es un coche y no es un bus
-        if (other.GetComponent<Coche>())
+        if (other.GetComponent<Coche>() && !other.GetComponent<Bus>())
         {
             float probabilidad = Random.Range(0f, 100f);
             if (probabilidad <= probabilidadCoche) // Comparar con el porcentaje
             {
                 _edificio.IncrementarCantidadVehiculos();
-                Destroy(other.gameObject); // Eliminar el coche
+                RutasTrafico rutasTrafico = other.GetComponent<RutasTrafico>();
+                if (rutasTrafico != null)
+                {
+                    rutasTrafico.EnterBuilding(entryWaypoint);
+                }
                 _gestionTrafico.InstanciarCocheAleatorio(); // Instanciar un nuevo coche en un lugar aleatorio
             }
         }
@@ -39,7 +47,11 @@ public class EntrarEdificio : MonoBehaviour
             if (probabilidad <= probabilidadCoche) // Comparar con el porcentaje
             {
                 _edificio.IncrementarCantidadPeatones();
-                Destroy(other.gameObject); // Eliminar el coche
+                RutasTrafico rutasTrafico = other.GetComponent<RutasTrafico>();
+                if (rutasTrafico != null)
+                {
+                    rutasTrafico.EnterBuilding(entryWaypoint);
+                }
                 _gestionPeatones.InstanciarPeatonAleatorio(); // Instanciar un nuevo coche en un lugar aleatorio
             }
         }
