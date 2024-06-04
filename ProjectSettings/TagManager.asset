@@ -7,11 +7,12 @@ TagManager:
   - Bus
   - Selectable
   - Lluvia
+  - ParadaBus
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Peaton
   - Water
   - UI
   - 

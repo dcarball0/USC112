@@ -48,5 +48,15 @@ public class Edificio : MonoBehaviour
         indiceCalidadAire = nuevoIndice;
     }
 
+    public void IncrementarCantidadVehiculos()
+    {
+        cantidadVehiculos++;
+    }
+
+    public void IncrementarCantidadPeatones()
+    {
+        cantidadPeatones++;
+    }
+
     // Otros métodos relevantes según la lógica del juego
 }

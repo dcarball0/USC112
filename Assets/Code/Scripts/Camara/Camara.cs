@@ -30,6 +30,9 @@ public class Camara : MonoBehaviour
     private float doubleClickTime = 0.3f; // Tiempo máximo para detectar un doble clic
     private float targetDistance; // Distancia objetivo para la interpolación
 
+    private GameObject elementoSeleccionado;
+    private bool isFollowingElemento = false;
+
     private float ClampAngle(float angle, float min, float max)
     {
         if (angle < -360f)
@@ -52,6 +55,12 @@ public class Camara : MonoBehaviour
 
     private void LateUpdate()
     {
+        if (isFollowingElemento && elementoSeleccionado != null)
+        {
+            SetTarget(elementoSeleccionado.transform.position);
+            //targetDistance = 20f; // Ajusta esta distancia según sea necesario para el zoom
+        }
+
         if (Input.GetKey(KeyCode.LeftAlt))
         {
             var axisX = Input.GetAxis("Mouse X");
@@ -87,10 +96,15 @@ public class Camara : MonoBehaviour
         // Cambiar focus al pulsar la F
         else if (Input.GetKey(KeyCode.F))
         {
+            SeleccionarElemento(null); // Detener el seguimiento del coche cuando se usa otro input de la cámara
             if (focusItem != null)
             {
                 SetTarget(focusItem.transform.position);
             }
+        }
+        else if (Input.GetKey(KeyCode.Space))
+        {
+            SeleccionarElemento(null);
         }
 
         if (Input.GetMouseButtonDown(0))
@@ -101,8 +115,10 @@ public class Camara : MonoBehaviour
                 RaycastHit hit;
                 if (Physics.Raycast(ray, out hit))
                 {
+                    // Si es edificio o papelera
                     if (hit.transform.CompareTag("Selectable"))
                     {
+                        SeleccionarElemento(null);
                         // TODO: que haga zoom al objeto, pero tiene 0,0,0 dentro del padre, asi que ya vere
                         ZoomToHitPoint(hit.point, hit.transform);
 
@@ -117,6 +133,24 @@ public class Camara : MonoBehaviour
                         {
                             papelera.VaciarPapelera();
                         }
+
+                        //TorreComunicacion torre = hit.transform.GetComponent<TorreComunicacion>();
+                        //if(torre != null)
+                        //{
+                        //    torre.(true);
+                        //}
+                    }
+                    else if (hit.transform.GetComponent<Coche>() != null)
+                    {
+                        SeleccionarElemento(hit.transform.gameObject);
+                        
+                        ZoomToHitPoint(hit.point, hit.transform);
+                    }
+                    else if (hit.transform.GetComponent<Peaton>() != null)
+                    {
+                        SeleccionarElemento(hit.transform.gameObject);
+                        
+                        ZoomToHitPoint(hit.point, hit.transform);
                     }
                 }
             }
@@ -163,5 +197,36 @@ public class Camara : MonoBehaviour
     private void UpdateCameraDistance()
     {
         _distance = Mathf.Lerp(_distance, targetDistance, _distanceLerpSpeed * Time.deltaTime);
+    }
+
+    public void SeleccionarElemento(GameObject elemento)
+    {
+        // Verificar si hay un elemento previamente seleccionado
+        if (elementoSeleccionado != null)
+        {
+            Coche coche = elementoSeleccionado.GetComponent<Coche>();
+            Peaton peaton = elementoSeleccionado.GetComponent<Peaton>();
+
+            if (coche != null) coche.SetFocus(false);
+            else if (peaton != null) peaton.SetFocus(false);
+        }
+
+        elementoSeleccionado = elemento;
+
+        // Verificar si vamos a elemnto no seleccionable
+        if (elementoSeleccionado != null)
+        {
+            Coche coche = elementoSeleccionado.GetComponent<Coche>();
+            Peaton peaton = elementoSeleccionado.GetComponent<Peaton>();
+
+            if (coche != null) coche.SetFocus(true);
+            else if (peaton != null) peaton.SetFocus(true);
+
+            isFollowingElemento = true;
+        }
+        else
+        {
+            isFollowingElemento = false;
+        }
     }
 }
