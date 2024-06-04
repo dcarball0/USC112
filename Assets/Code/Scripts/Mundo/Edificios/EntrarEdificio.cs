@@ -12,6 +12,7 @@ public class EntrarEdificio : MonoBehaviour
     [SerializeField] [Range(0, 100)] float probabilidadCoche = 10f; // Porcentaje de probabilidad de entrar al edificio
     [SerializeField] Transform entryWaypoint; // Waypoint al que deben moverse los objetos
 
+
     void Start()
     {
         _edificio = edificio.GetComponent<Edificio>();
