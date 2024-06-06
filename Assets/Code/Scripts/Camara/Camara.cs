@@ -161,7 +161,7 @@ public class Camara : MonoBehaviour
         float scroll = Input.GetAxis("Mouse ScrollWheel");
         if (scroll != 0.0f)
         {
-            targetDistance = Mathf.Clamp(_distance - scroll * _zoomSpeed*10000 * Time.deltaTime, minmaxDistance.x, minmaxDistance.y);
+            targetDistance = Mathf.Clamp(_distance - scroll * _zoomSpeed*2000 * Time.deltaTime, minmaxDistance.x, minmaxDistance.y);
         }
 
         // Actualizar la distancia de la cámara usando Lerp
